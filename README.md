@@ -4,6 +4,7 @@
 
 This is the project 5 Arcade game clone Project for Udacity Frontend Nanodegree. The main focus of this app was to focus on OOP.
 
+![arcade1](https://cloud.githubusercontent.com/assets/15135653/24422031/21974cb0-13c6-11e7-8a29-3da082dd56a8.png)
 
 ## Requirements
 
