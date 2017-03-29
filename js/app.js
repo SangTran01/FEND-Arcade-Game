@@ -37,10 +37,76 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Player.prototype.keyDownHandler = function(e) {
+    //Check if user reached end of map
+
+    if (this.y <= 0) {
+        alert("GAME");
+        this.playerReset();
+    }
+    // Right press
+    if(e.keyCode == 39) {
+        e.preventDefault();
+        this.rightPressed = true;
+        if (this.x >= width-100) {
+            this.x -= 10;
+        } else {
+            this.x += 10;
+        }
+    }
+    // Left press
+    else if(e.keyCode == 37) {
+        e.preventDefault();
+        this.leftPressed = true;
+        if (this.x <= 0) {
+            this.x += 10;
+        } else {
+            this.x -= 10;
+        }
+    }
+    // Up press
+    else if(e.keyCode == 38) {
+        e.preventDefault();
+        this.upPressed = true;
+        this.y -= 10;
+    }
+    // Down press
+    else if(e.keyCode == 40) {
+        e.preventDefault();
+        this.downPressed = true;
+        if (this.y >= height-200) {
+            this.y -= 10;
+        }
+        else {
+            this.y += 10;
+        }
+    }
+}
+
+Player.prototype.keyUpHandler = function(e){
+    if(e.keyCode == 39) {
+        this.rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        this.leftPressed = false;
+    }
+    else if(e.keyCode == 38) {
+        this.upPressed = false;
+    }
+    else if(e.keyCode == 40) {
+        this.downPressed = false;
+    }
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player = new Player();
+
+// Made custom keydown and keyup eventListeners
+// Listens on player button press
+document.addEventListener("keydown", function() {player.keyDownHandler(event) }, false);
+document.addEventListener("keyup", function() {player.keyUpHandler(event) }, false);
 
 
 //Enemy Class
@@ -48,13 +114,13 @@ var player = new Player();
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x = 0;
-    this.y = updateEnemySpot();
+    this.x = -100;
+    this.y = Math.ceil(Math.random() * 3) * (150 - 80);
 
     this.width = 100;
     this.height = 150;
 
-    //this.startSpeed = updateEnemySpeed();
+    this.speed = Math.ceil(Math.random() * 300) + 100;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -78,34 +144,16 @@ Enemy.prototype.update = function(dt) {
     //Clears the awkward path the enemy makes when leaving the screen
     ctx.clearRect(0, 0, width, height);
 
-    this.x += (updateEnemySpeed() * dt);
+    this.x += this.speed * dt;
+
     if (this.x >= width) {
-        this.x = 0;
-        this.y = updateEnemySpot();
+        this.x = -100;
+        this.y = Math.ceil(Math.random() * 3) * (150 - 80);
+        this.speed = Math.ceil(Math.random() * 300) + 100;
     }
+
     this.collisionCheckEnemy();
 };
-
-//Gives enemies a random speed
-function updateEnemySpeed() {
-    return Math.floor(Math.random() * 500) + 1;
-}
-
-//Gives enemies a random start position
-function updateEnemySpot() {
-    var random = Math.floor(Math.random() * 3) + 1;
-
-    switch(random) {
-        case 1:
-        return 50;
-        break;
-        case 2:
-        return 130;
-        break;
-        default:
-        return 230;
-    }
-}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -114,87 +162,7 @@ Enemy.prototype.render = function() {
 
 
 var allEnemies = [
-new Enemy(),
-new Enemy(),
-new Enemy()
+    new Enemy(),
+    new Enemy(),
+    new Enemy()
 ];
-
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-
-// document.addEventListener('keyup', function(e) {
-//     var allowedKeys = {
-//         37: 'left',
-//         38: 'up',
-//         39: 'right',
-//         40: 'down'
-//     };
-
-//     player.handleInput(allowedKeys[e.keyCode]);
-// });
-
-// Made custom keydown and keyup eventListeners
-// Listens on player button press
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler(e) {
-    //Check if user reached end of map
-    if (player.y <= 0) {
-        alert("GAME");
-        player.playerReset();
-    }
-
-    // Right press
-    if(e.keyCode == 39) {
-        e.preventDefault();
-        player.rightPressed = true;
-        if (player.x >= width-100) {
-            player.x -= 10;
-        } else {
-            player.x += 10;
-        }
-    }
-    // Left press
-    else if(e.keyCode == 37) {
-        e.preventDefault();
-        player.leftPressed = true;
-        if (player.x <= 0) {
-            player.x += 10;
-        } else {
-            player.x -= 10;
-        }
-    }
-    // Up press
-    else if(e.keyCode == 38) {
-        e.preventDefault();
-        player.upPressed = true;
-        player.y -= 10;
-    }
-    // Down press
-    else if(e.keyCode == 40) {
-        e.preventDefault();
-        player.downPressed = true;
-        if (player.y >= height-200) {
-            player.y -= 10;
-        }
-        else {
-            player.y += 10;
-        }
-    }
-}
-function keyUpHandler(e) {
-    if(e.keyCode == 39) {
-        player.rightPressed = false;
-    }
-    else if(e.keyCode == 37) {
-        player.leftPressed = false;
-    }
-    else if(e.keyCode == 38) {
-        player.upPressed = false;
-    }
-    else if(e.keyCode == 40) {
-        player.downPressed = false;
-    }
-}
