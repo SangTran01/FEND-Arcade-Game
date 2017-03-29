@@ -18,7 +18,7 @@ var Player = function(){
     this.leftPressed = false;
     this.upPressed = false;
     this.downPressed = false;
-}
+};
 
 // Method to reset player position
 Player.prototype.playerReset = function() {
@@ -48,6 +48,7 @@ Player.prototype.keyDownHandler = function(e) {
     if(e.keyCode == 39) {
         e.preventDefault();
         this.rightPressed = true;
+        console.log(this);
         if (this.x >= width-100) {
             this.x -= 10;
         } else {
@@ -81,7 +82,7 @@ Player.prototype.keyDownHandler = function(e) {
             this.y += 10;
         }
     }
-}
+};
 
 Player.prototype.keyUpHandler = function(e){
     if(e.keyCode == 39) {
@@ -96,7 +97,7 @@ Player.prototype.keyUpHandler = function(e){
     else if(e.keyCode == 40) {
         this.downPressed = false;
     }
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
